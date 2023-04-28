@@ -20,7 +20,6 @@ int OnInit()
    return(INIT_SUCCEEDED);
   }
 */  
-  
 void OnInit()
 {
     // Define variables
@@ -35,16 +34,21 @@ void OnInit()
     int copied = CopyRates("XAUUSD", PERIOD_M1, from_date, to_date, prices);
 
     // Open the file for writing
-    int file_handle = FileOpen("xauusd_candles.csv", FILE_WRITE|FILE_CSV);
+    int file_handle = FileOpen("xauusd_candles.txt", FILE_WRITE|FILE_TXT);
 
-    // Write the OHLC data of each candle to the file
+    // Write the header line
     if (file_handle != INVALID_HANDLE) {
+        FileWrite(file_handle, "Time,Open,High,Low,Close");
+
+        // Write the OHLC data of each candle to the file
         for (int i = 0; i < copied; i++) {
-            FileWrite(file_handle, TimeToString(prices[i].time), prices[i].open, prices[i].high, prices[i].low, prices[i].close);
+            string line = TimeToString(prices[i].time) + "," + DoubleToString(prices[i].open, _Digits) + "," + DoubleToString(prices[i].high, _Digits) + "," + DoubleToString(prices[i].low, _Digits) + "," + DoubleToString(prices[i].close, _Digits);
+            FileWrite(file_handle, line);
         }
         FileClose(file_handle);
     }
 }
+
 
 
 //+------------------------------------------------------------------+
